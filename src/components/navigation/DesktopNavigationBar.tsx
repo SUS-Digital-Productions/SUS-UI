@@ -17,6 +17,7 @@ import { CogIcon } from "lucide-react";
 
 type DesktopNavigationBarProps = {
   navbarMenuItems: MenuItem[];
+  loginMenuItems: MenuItem[];
 };
 
 export const DesktopNavigationBar = (props: DesktopNavigationBarProps) => {
@@ -58,7 +59,7 @@ export const DesktopNavigationBar = (props: DesktopNavigationBarProps) => {
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="z-1">
-                          <ul className="w-[360px] p-3">
+                          <ul className="w-[360px] p-3 list-none">
                             {item.subMenu.map((item, idx) => (
                               <li key={idx}>
                                 <Link
@@ -92,7 +93,41 @@ export const DesktopNavigationBar = (props: DesktopNavigationBarProps) => {
       </div>
       <div className="flex items-center gap-2">
         <ThemeToggle></ThemeToggle>
-        <Button onClick={() => wax.login()}>Login</Button>
+        {!wax.session && <Button onClick={() => wax.login()}>Login</Button>}
+        {wax.session && (
+          <NavigationMenu className="list-none">
+            <NavigationMenuItem
+              key={"nav-bar_"}
+              className="text-muted-foreground"
+            >
+              <NavigationMenuTrigger>
+                <span>{"Welcome " + wax.session?.actor.toString()}</span>
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <div className="z-1">
+                  <ul className="w-[360px] p-3 list-none">
+                    {props.loginMenuItems.map((item, idx) => (
+                      <li key={idx}>
+                        <Link
+                          className={cn(
+                            "flex select-none gap-4 rounded-md p-3 leading-none no-underline outline-none transition-colors focus:bg-accent focus:text-accent-foreground"
+                          )}
+                          to={item.link}
+                        >
+                          <div>
+                            <div className="text-sm font-semibold">
+                              {item.title}
+                            </div>
+                          </div>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenu>
+        )}
         <Button onClick={() => navigate("/settings")}>
           <CogIcon></CogIcon>
         </Button>

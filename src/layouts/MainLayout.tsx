@@ -1,4 +1,5 @@
 import { Topbar } from "@/components/navigation/Topbar";
+import Footer from "@/components/shared/footer";
 import { Outlet } from "react-router";
 
 export default function MainLayout() {
@@ -8,6 +9,7 @@ export default function MainLayout() {
       <main className="flex-1">
         <Outlet />
       </main>
+      <Footer></Footer>
     </div>
   );
 }

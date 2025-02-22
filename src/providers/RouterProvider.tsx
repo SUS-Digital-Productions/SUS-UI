@@ -4,6 +4,7 @@ import { SideLayout } from "@/layouts/SideLayout";
 import { ComingSoonPage } from "@/pages/coming-soon-page/ComingSoonPage";
 import { AdminLandingPage } from "@/pages/landing-page/AdminLandingPage";
 import { LandingPage } from "@/pages/landing-page/LandingPage";
+import { LogoutPage } from "@/pages/logout-page/LogoutPage";
 import { NotFoundPage } from "@/pages/not-found-page/NotFoundPage";
 import { SettingsPage } from "@/pages/settings-page/SettingsPage";
 import { createBrowserRouter } from "react-router";
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <LandingPage></LandingPage>,
+          },
+          {
+            path: "logout",
+            element: <LogoutPage></LogoutPage>,
           },
           {
             path: "admin",

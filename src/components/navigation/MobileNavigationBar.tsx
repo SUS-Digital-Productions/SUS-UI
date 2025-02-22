@@ -24,6 +24,7 @@ import ThemeToggle from "../shared/theme-toggle";
 
 type MobileNavigationBarProps = {
   navbarMenuItems: MenuItem[];
+  loginMenuItems: MenuItem[];
 };
 
 export const MobileNavigationBar = (props: MobileNavigationBarProps) => {
@@ -103,7 +104,43 @@ export const MobileNavigationBar = (props: MobileNavigationBarProps) => {
             </div>
             <div className="flex items-center gap-2">
               <ThemeToggle></ThemeToggle>
-              <Button onClick={() => wax.login()}>Login</Button>
+              {!wax.session && (
+                <Button onClick={() => wax.login()}>Login</Button>
+              )}
+              {wax.session && (
+                <Accordion
+                  key={"mobile-nav-bar_login"}
+                  type="single"
+                  collapsible
+                  className="w-full flex flex-col gap-4"
+                >
+                  <AccordionItem value="products" className="border-b-0">
+                    <AccordionTrigger className="py-0 font-medium hover:no-underline">
+                      {"Welcome " + wax.session?.actor.toString()}
+                    </AccordionTrigger>
+                    <AccordionContent className="mt-2 space-y-1">
+                      {props.loginMenuItems.map(
+                        (item: MenuItem, idx: number) => (
+                          <Link
+                            onClick={() => setOpen(false)}
+                            key={"mobile-nav-bar_" + idx}
+                            className={cn(
+                              "flex select-none gap-4 rounded-md p-3 leading-none outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            )}
+                            to={item.link}
+                          >
+                            <div>
+                              <div className="text-sm font-medium">
+                                {item.title}
+                              </div>
+                            </div>
+                          </Link>
+                        )
+                      )}
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              )}
               <Button onClick={() => navigate("/settings")}>
                 <CogIcon></CogIcon>
               </Button>

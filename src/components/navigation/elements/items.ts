@@ -20,3 +20,10 @@ export const menuItems: MenuItem[] = [
     title: "View",
   },
 ];
+
+export const loggedInMenuItems: MenuItem[] = [
+  {
+    link: "/logout",
+    title: "Logout",
+  },
+];
