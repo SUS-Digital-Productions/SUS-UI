@@ -15,8 +15,8 @@ export const Sidebar = (props: SidebarProps) => {
               key={index}
               className={({ isActive }) =>
                 isActive
-                  ? "text-green-600 text-lg font-semibold"
-                  : "text-gray-500 hover:text-green-600 text-lg"
+                  ? "text-primary text-lg font-semibold"
+                  : "text-gray-500 hover:text-primary text-lg"
               }
               to={item.link}
             >

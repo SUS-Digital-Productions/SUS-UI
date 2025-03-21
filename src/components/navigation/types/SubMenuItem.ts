@@ -1,3 +1,5 @@
+import { JSX } from "react";
+
 export type SubMenuItem = {
   title: string;
   description: string;
