@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 
 // Define the context type
 type AtomicContextType = {
@@ -16,17 +16,7 @@ export const AtomicContext = createContext<AtomicContextType | undefined>(
 );
 
 export const AtomicProvider = (props: AtomicProviderProps) => {
-  const [endpoint, setEndpoint] = useState<string>("");
-
-  useEffect(() => {
-    if (localStorage.getItem("atomic_endpoint"))
-      setEndpoint(localStorage.getItem("atomic_endpoint")!);
-    else {
-      const endpoint = "https://atomic-wax.tacocrypto.io";
-      localStorage.setItem("atomic_endpoint", endpoint);
-      setEndpoint(endpoint);
-    }
-  }, []);
+  const [endpoint, setEndpoint] = useState<string>(localStorage.getItem("atomic_endpoint") || "https://atomic-wax.tacocrypto.io");
 
   const change = (endpoint: string) => {
     localStorage.setItem("atomic_endpoint", endpoint);
