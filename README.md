@@ -1,73 +1,84 @@
-# React + TypeScript + Vite
+# SUS-UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**SUS-UI** is a powerful yet lightweight **React-based UI template** designed specifically for developers building applications on the **WAX blockchain**. It provides everything you need to rapidly bootstrap a frontend with blockchain functionality, including wallet login, network configuration, and NFT integration — all powered by the modern **WharfKit** stack.
 
-Currently, two official plugins are available:
+Whether you're creating a staking portal, NFT marketplace, or token-based game dashboard, SUS-UI helps you skip the repetitive setup and jump straight into development.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Key Features
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- ✅ **WharfKit Integration**  
+  Includes built-in support for [WharfKit](https://github.com/wharfkit), enabling seamless wallet authentication using WAX-compatible wallets.
 
-## Expanding the ESLint configuration
+- ✅ **Dynamic RPC & API Switching**  
+  Uses React Context to allow runtime switching of:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+  - **WAX RPC endpoints** for blockchain interaction
+  - **AtomicAssets API endpoints** for NFT and asset data
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- ✅ **Clean, Extensible Architecture**  
+  Easily modify or extend components for your specific use case.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- ✅ **Developer-Focused Template**  
+  Simple structure, minimal dependencies, and modular design patterns help developers stay productive and focused.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🧰 Tech Stack
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **React** (Functional Components, Hooks)
+- **React Context API** (for dynamic endpoint switching)
+- **WharfKit** (for wallet login and blockchain operations)
+- **AtomicAssets API** (for NFT data and marketplace integration)
+- **TypeScript** (type-safe and scalable)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## 🔗 Use Cases
+
+SUS-UI is ideal for projects built on the WAX blockchain, such as:
+
+- 🖼️ **NFT Marketplaces**
+- 📊 **Staking Dashboards**
+- 🎮 **Game Frontends with Wallet Integration**
+- 💰 **Token Tracking Tools**
+- 🔐 **Login-Protected dApps**
+
+---
+
+## 🛠️ Getting Started
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/SUS-Digital-Productions/SUS-UI.git
+   cd SUS-UI
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install --force
+   ```
+
+3. **Run the development server**
+
+   ```bash
+   npm run dev
+   ```
+
+4. **Configure your endpoints**  
+   Edit or extend the provided context (`GreymassContext` and `AtomicContext`) to point to your desired RPC and AtomicAssets API endpoints.
+
+---
+
+## 🎯 Why Use SUS-UI?
+
+Instead of spending time wiring up wallet connections, configuring blockchain endpoints, or handling NFT data manually, SUS-UI gives you a well-structured starting point with all the essentials baked in. It's the perfect toolkit for rapidly developing WAX dApps and web tools with minimal setup and maximum flexibility.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** — free to use, modify, and distribute.
