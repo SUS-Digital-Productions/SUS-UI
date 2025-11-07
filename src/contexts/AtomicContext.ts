@@ -1,12 +1,10 @@
 import { createContext } from "react";
 
 export type AtomicContextType = {
-  endpoint: string;
-  change: (endpoint: string) => void;
+  assetsEndpoint: string;
+  marketEndpoint: string;
+  changeAssets: (endpoint: string) => void;
+  changeMarket: (endpoint: string) => void;
 };
 
-
-
-export const AtomicContext = createContext<AtomicContextType | undefined>(
-  undefined
-);
+export const AtomicContext = createContext<AtomicContextType | undefined>(undefined);

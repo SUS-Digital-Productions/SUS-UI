@@ -1,10 +1,13 @@
-import { WaxSessionContext } from "@/contexts/WaxSessionContext";
 import { useContext } from "react";
+import {
+  WaxSessionContext,
+  type WaxSessionContextType,
+} from "@/contexts/WaxSessionContext";
 
-export const useWaxSession = () => {
+export const useWaxSession = (): WaxSessionContextType => {
   const context = useContext(WaxSessionContext);
-  if (!context) {
-    throw new Error("useSession must be used within a SessionProvider");
+  if (context === undefined) {
+    throw new Error("useWaxSession must be used within a WaxSessionProvider");
   }
   return context;
 };

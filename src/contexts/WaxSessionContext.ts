@@ -5,7 +5,7 @@ import { WalletPluginWombat } from "@wharfkit/wallet-plugin-wombat";
 import WebRenderer from "@wharfkit/web-renderer";
 import { createContext } from "react";
 
-export const sessionKit = new SessionKit({
+export const sessionKitObject = new SessionKit({
   appName: "SUS UI",
   chains: [Chains.WAX, Chains.Vaulta],
   ui: new WebRenderer(),
@@ -16,10 +16,12 @@ export const sessionKit = new SessionKit({
   ],
 });
 
-type WaxSessionContextType = {
+export type WaxSessionContextType = {
   session: Session | undefined;
   login: () => Promise<void>;
   logout: () => Promise<void>;
+  loading: boolean;
+  error: string | null;
 };
 
 export const WaxSessionContext = createContext<
