@@ -1,25 +1,35 @@
-import { RouterProvider } from "react-router";
-import { SessionProvider } from "./providers/SessionProvider";
+import "./App.css";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./util/query-client";
+import { SidebarProvider } from "./providers/SidebarProvider";
 import { ThemeProvider } from "./providers/ThemeProvider";
-import { APP_THEME_STORAGE_KEY, ZINC_DARK_THEME } from "./utils/constants";
-import { router } from "./providers/RouterProvider";
-import { GreymassProvider } from "./providers/GreymassProvider";
+import { APP_THEME_STORAGE_KEY, ZINC_DARK_THEME } from "./util/constants";
+import { BlockchainNodeProvider } from "./providers/BlockchainNodeProvider";
+import { HyperionProvider } from "./providers/HyperionProvider";
 import { AtomicProvider } from "./providers/AtomicProvider";
+import { WaxSessionProvider } from "./providers/WaxSessionProvider";
+import { RouterProvider } from "./providers/RouterProvider";
 
 function App() {
   return (
-    <ThemeProvider
-      defaultTheme={ZINC_DARK_THEME}
-      storageKey={APP_THEME_STORAGE_KEY}
-    >
-      <GreymassProvider>
-        <AtomicProvider>
-          <SessionProvider>
-            <RouterProvider router={router}></RouterProvider>
-          </SessionProvider>
-        </AtomicProvider>
-      </GreymassProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <BlockchainNodeProvider>
+        <HyperionProvider>
+          <AtomicProvider>
+            <WaxSessionProvider>
+              <SidebarProvider>
+                <ThemeProvider
+                  defaultTheme={ZINC_DARK_THEME}
+                  storageKey={APP_THEME_STORAGE_KEY}
+                >
+                  <RouterProvider />
+                </ThemeProvider>
+              </SidebarProvider>
+            </WaxSessionProvider>
+          </AtomicProvider>
+        </HyperionProvider>
+      </BlockchainNodeProvider>
+    </QueryClientProvider>
   );
 }
 

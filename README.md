@@ -13,6 +13,7 @@ Whether you're creating a staking portal, NFT marketplace, or token-based game d
 
 - ✅ **Dynamic RPC & API Switching**  
   Uses React Context to allow runtime switching of:
+
   - **WAX RPC endpoints** for blockchain interaction
   - **AtomicAssets API endpoints** for NFT and asset data
 
@@ -48,18 +49,21 @@ SUS-UI is ideal for projects built on the WAX blockchain, such as:
 
 ## 🛠️ Getting Started
 
-1. **Clone the repository**  
+1. **Clone the repository**
+
    ```bash
    git clone https://github.com/SUS-Digital-Productions/SUS-UI.git
    cd SUS-UI
    ```
 
-2. **Install dependencies**  
+2. **Install dependencies**
+
    ```bash
    npm install --force
    ```
 
-3. **Run the development server**  
+3. **Run the development server**
+
    ```bash
    npm run dev
    ```

@@ -1,5 +1,5 @@
 import { ThemeProviderContext } from "@/hooks/use-theme";
-import { APP_THEME_STORAGE_KEY, ZINC_DARK_THEME } from "@/utils/constants";
+import { APP_THEME_STORAGE_KEY, ZINC_DARK_THEME } from "@/util/constants";
 import { useEffect, useState } from "react";
 
 type ThemeProviderProps = {

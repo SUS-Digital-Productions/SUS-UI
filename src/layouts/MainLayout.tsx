@@ -1,15 +1,15 @@
 import { Topbar } from "@/components/navigation/Topbar";
-import Footer from "@/components/shared/footer";
+import Footer from "@/components/shared/Footer";
 import { Outlet } from "react-router";
 
-export default function MainLayout() {
+export function MainLayout() {
   return (
-    <div className="h-svh flex flex-col">
-      <Topbar></Topbar>
-      <main className="flex-1">
+    <div className="min-h-screen flex flex-col bg-background">
+      <Topbar />
+      <main className="flex-1 pt-14">
         <Outlet />
       </main>
-      <Footer></Footer>
+      <Footer />
     </div>
   );
 }

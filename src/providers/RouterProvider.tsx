@@ -1,59 +1,87 @@
-import MainLayout from "@/layouts/MainLayout";
 import { RootLayout } from "@/layouts/RootLayout";
-import { SideLayout } from "@/layouts/SideLayout";
-import { ComingSoonPage } from "@/pages/coming-soon-page/ComingSoonPage";
-import { AdminLandingPage } from "@/pages/landing-page/AdminLandingPage";
-import { LandingPage } from "@/pages/landing-page/LandingPage";
-import { LogoutPage } from "@/pages/logout-page/LogoutPage";
-import { NotFoundPage } from "@/pages/not-found-page/NotFoundPage";
-import { SettingsPage } from "@/pages/settings-page/SettingsPage";
-import { createBrowserRouter } from "react-router";
+import { MainLayout } from "@/layouts/MainLayout";
+import { MarketplaceLayout } from "@/layouts/MarketplaceLayout";
+import { AboutPage } from "@/pages/AboutPage";
+import { AccountPage } from "@/pages/AccountPage";
+import { CollectionsPage } from "@/pages/CollectionsPage";
+import { DashboardPage } from "@/pages/DashboardPage";
+import { NotFoundPage } from "@/pages/NotFoundPage";
+import { ViewNFTsPage } from "@/pages/ViewNFTsPage";
+import { ComingSoonPage } from "@/pages/ComingSoonPage";
+import { createBrowserRouter, RouterProvider as ReactRouterProvider } from "react-router";
 
-export const router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout></RootLayout>,
-    errorElement: <NotFoundPage></NotFoundPage>,
+    element: <RootLayout />,
+    errorElement: <NotFoundPage />,
     children: [
       {
-        element: <MainLayout></MainLayout>,
+        element: <MainLayout />,
         children: [
           {
             index: true,
-            element: <LandingPage></LandingPage>,
+            element: <DashboardPage />,
           },
           {
-            path: "logout",
-            element: <LogoutPage></LogoutPage>,
+            path: "about",
+            element: <AboutPage />,
           },
+
           {
-            path: "admin",
-            element: <SideLayout></SideLayout>,
+            path: "marketplace",
+            element: <MarketplaceLayout />,
             children: [
               {
                 index: true,
-                element: <AdminLandingPage></AdminLandingPage>,
-              },
-              {
-                path: "settings",
-                element: <ComingSoonPage></ComingSoonPage>,
+                element: <CollectionsPage />,
               },
               {
                 path: "collections",
-                element: <ComingSoonPage></ComingSoonPage>,
+                element: <CollectionsPage />,
               },
             ],
           },
           {
-            path: "settings",
-            element: <SettingsPage></SettingsPage>,
+            path: "collections",
+            element: <CollectionsPage />,
           },
           {
-            path: "view/nfts",
-            element: <ComingSoonPage></ComingSoonPage>,
+            path: "view",
+            element: <MarketplaceLayout />,
+            children: [
+              {
+                path: "nfts",
+                element: <ViewNFTsPage />,
+              },
+            ],
+          },
+          {
+            path: "inventory",
+            element: <ComingSoonPage />,
+          },
+          {
+            path: "activity",
+            element: <ComingSoonPage />,
+          },
+          {
+            path: "watchlist",
+            element: <ComingSoonPage />,
+          },
+          {
+            path: "profile/:actor",
+            element: <ComingSoonPage />,
+          },
+          {
+            path: "account/:account",
+            element: <AccountPage />,
           },
         ],
       },
     ],
   },
 ]);
+
+export const RouterProvider = () => {
+  return <ReactRouterProvider router={router} />;
+};
