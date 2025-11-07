@@ -1,38 +1,42 @@
-import { useState } from "react";
-
-// Helper: Build image URL from IPFS hash or direct URL
-function getCollectionImgUrl(img?: string): string | undefined {
-  if (!img) return undefined;
-  // If already a full URL
-  if (/^https?:\/\//.test(img)) return img;
-  // If valid IPFS hash (Qm... or baf...)
-  if (img.startsWith('Qm') && img.length === 46) {
-    return `https://cloudflare-ipfs.com/ipfs/${img}`;
-  }
-  if (img.startsWith('baf') && img.length >= 46) {
-    return `https://cloudflare-ipfs.com/ipfs/${img}`;
-  }
-  // Otherwise, not a valid image
-  return undefined;
-}
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { Search, ExternalLink, TrendingUp } from "lucide-react";
-import { useCollections } from "@/hooks/use-collections";
+import { useInfiniteCollections } from "@/hooks/use-collections";
 import { useSearchParams } from "react-router";
+import { LazyImage } from "@/components/ui/lazy-image";
+
+// Helper: Build image URL from IPFS hash or direct URL
+function getCollectionImgUrl(img?: string): string | undefined {
+  if (!img) return undefined;
+  
+  // If already a full URL, return as-is
+  if (/^https?:\/\//.test(img)) return img;
+  
+  // Handle IPFS hashes (Qm... format - 46 characters)
+  if (img.startsWith('Qm') && img.length === 46) {
+    return `https://ipfs.io/ipfs/${img}`;
+  }
+  
+  // Handle IPFS CIDv1 hashes (bafkrei..., bafyrei..., etc - variable length)
+  if (img.startsWith('baf') && img.length >= 46) {
+    return `https://ipfs.io/ipfs/${img}`;
+  }
+  
+  // If it doesn't match any known pattern, return undefined
+  return undefined;
+}
 
 export const CollectionsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
+  const observerTarget = useRef<HTMLDivElement>(null);
   
   // Parse URL query parameters for ordering/sorting
-  // AtomicAssets API: order = direction (asc/desc), sort = field name (created, updated, etc.)
-  // - 'view' provides semantic shortcuts (e.g., view=trending → order:desc, sort:created)
-  // - explicit 'order' and 'sort' params override view
   const view = searchParams.get("view");
   const urlOrder = searchParams.get("order");
   const urlSort = searchParams.get("sort");
@@ -49,13 +53,46 @@ export const CollectionsPage = () => {
   const order = urlOrder || (view && viewMap[view]?.order) || "desc";
   const sort = urlSort || (view && viewMap[view]?.sort) || "created";
 
-  const { data, isLoading, refetch } = useCollections({ page, limit: 12, order, sort });
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+  } = useInfiniteCollections({ limit: 24, order, sort });
 
-  const collections = data?.data || [];
-  const filteredCollections = collections.filter(collection =>
+  // Flatten all pages into single array
+  const allCollections = data?.pages.flatMap(page => page.data) || [];
+  
+  // Filter based on search term
+  const filteredCollections = allCollections.filter(collection =>
     collection.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     collection.collection_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Infinite scroll observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const target = observerTarget.current;
+    if (target) {
+      observer.observe(target);
+    }
+
+    return () => {
+      if (target) {
+        observer.unobserve(target);
+      }
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <div className="w-full mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-8">
@@ -83,10 +120,10 @@ export const CollectionsPage = () => {
 
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 grid-cols-3xl-8 grid-cols-4xl-10 grid-cols-5xl-12 grid-cols-6xl-14 gap-4 lg:gap-5 xl:gap-6">
-          {Array.from({ length: 8 }).map((_, i) => (
+          {Array.from({ length: 12 }).map((_, i) => (
             <Card key={i}>
               <CardHeader>
-                <Skeleton className="h-48 w-full" />
+                <Skeleton className="aspect-square w-full" />
               </CardHeader>
               <CardContent>
                 <Skeleton className="h-4 w-3/4 mb-2" />
@@ -97,50 +134,59 @@ export const CollectionsPage = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 grid-cols-3xl-8 grid-cols-4xl-10 grid-cols-5xl-12 grid-cols-6xl-14 gap-4 lg:gap-5 xl:gap-6">
-          {filteredCollections.map((collection) => (
-            <Card key={collection.collection_name} className="hover:shadow-lg transition-shadow">
-              <CardHeader className="p-0">
-                <div className="aspect-square overflow-hidden rounded-t-lg">
-                  {getCollectionImgUrl(collection.img) && (
-                    <img
-                      src={getCollectionImgUrl(collection.img)}
-                      alt={collection.name || collection.collection_name}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent className="p-4">
-                <CardTitle className="text-lg mb-2 truncate">
-                  {collection.name || collection.collection_name}
-                </CardTitle>
-                <CardDescription className="mb-3">
-                  Collection: {collection.collection_name}
-                </CardDescription>
-                
-                <div className="flex items-center justify-between mb-3">
-                  <Badge variant="secondary" className="text-xs">
-                    <TrendingUp className="w-3 h-3 mr-1" />
-                    {collection.market_fee}% Fee
-                  </Badge>
-                  <span className="text-xs text-muted-foreground">
-                    By {collection.author}
-                  </span>
-                </div>
+          {filteredCollections.map((collection) => {
+            const imageUrl = getCollectionImgUrl(collection.img);
+            
+            return (
+              <Card key={collection.collection_name} className="hover:shadow-lg transition-shadow">
+                <CardHeader className="p-0">
+                  <div className="aspect-square overflow-hidden rounded-t-lg bg-muted">
+                    {imageUrl ? (
+                      <LazyImage
+                        src={imageUrl}
+                        alt={collection.name || collection.collection_name}
+                        className="w-full h-full object-cover"
+                        containerClassName="w-full h-full"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                        No Image
+                      </div>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent className="p-4">
+                  <CardTitle className="text-lg mb-2 truncate">
+                    {collection.name || collection.collection_name}
+                  </CardTitle>
+                  <CardDescription className="mb-3">
+                    Collection: {collection.collection_name}
+                  </CardDescription>
+                  
+                  <div className="flex items-center justify-between mb-3">
+                    <Badge variant="secondary" className="text-xs">
+                      <TrendingUp className="w-3 h-3 mr-1" />
+                      {collection.market_fee}% Fee
+                    </Badge>
+                    <span className="text-xs text-muted-foreground truncate ml-2">
+                      By {collection.author}
+                    </span>
+                  </div>
 
-                <Button variant="outline" size="sm" className="w-full" asChild>
-                  <a 
-                    href={`https://wax.atomichub.io/explorer/collection/${collection.collection_name}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    View on AtomicHub
-                  </a>
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                  <Button variant="outline" size="sm" className="w-full" asChild>
+                    <a 
+                      href={`https://wax.atomichub.io/explorer/collection/${collection.collection_name}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      View on AtomicHub
+                    </a>
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
 
@@ -153,22 +199,20 @@ export const CollectionsPage = () => {
         </div>
       )}
 
-      <div className="flex justify-center mt-8 gap-2">
-        <Button 
-          variant="outline" 
-          onClick={() => setPage(Math.max(1, page - 1))}
-          disabled={page === 1 || isLoading}
-        >
-          Previous
-        </Button>
-        <Button 
-          variant="outline" 
-          onClick={() => setPage(page + 1)}
-          disabled={isLoading}
-        >
-          Next
-        </Button>
-      </div>
+      {/* Infinite scroll observer target */}
+      {filteredCollections.length > 0 && (
+        <div ref={observerTarget} className="flex justify-center mt-8 py-4">
+          {isFetchingNextPage && (
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Spinner className="h-5 w-5" />
+              <span className="text-sm">Loading more collections...</span>
+            </div>
+          )}
+          {!hasNextPage && !isFetchingNextPage && (
+            <p className="text-sm text-muted-foreground">No more collections to load</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

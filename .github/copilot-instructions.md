@@ -37,7 +37,7 @@ Example: `WaxSessionContext.ts` → `WaxSessionProvider.tsx` → `use-wax-sessio
 - App designed to work for both authenticated and non-authenticated users (template approach)
 
 ### Dynamic Endpoint Switching
-- **Blockchain RPC**: `useBlockchainNode()` for WAX chain endpoints (default: `https://wax.greymass.com/v1`)
+- **Blockchain RPC**: `useBlockchainNode()` for WAX chain endpoints (default: `https://wax.greymass.com`)
 - **AtomicAssets API**: `useAtomic()` for NFT/marketplace data (default: `https://atomic-wax.tacocrypto.io`)
 - Both persist to localStorage with keys `APP_SESSION_BLOCKCHAIN_NODE_KEY` and `APP_SESSION_ATOMIC_NODE_KEY`
 - Runtime switching allows users to change endpoints without app restart

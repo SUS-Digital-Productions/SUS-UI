@@ -28,6 +28,8 @@ export const APP_SESSION_STORAGE_KEY = "sus_app_token";
 
 export const APP_SESSION_BLOCKCHAIN_NODE_KEY = "sus_app_blockchain_node";
 
+export const APP_SESSION_HYPERION_NODE_KEY = "sus_app_hyperion_node";
+
 export const APP_SESSION_ATOMIC_NODE_KEY = "sus_app_atomic_node";
 export const APP_SESSION_ATOMIC_ASSETS_NODE_KEY = "sus_app_atomic_assets_node";
 export const APP_SESSION_ATOMIC_MARKET_NODE_KEY = "sus_app_atomic_market_node";

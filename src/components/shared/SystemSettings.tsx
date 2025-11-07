@@ -20,12 +20,22 @@ import {
 import { Label } from "@/components/ui/label";
 import useTheme from "@/hooks/use-theme";
 import { useBlockchainNode } from "@/hooks/use-blockchain-node";
+import { useHyperion } from "@/hooks/use-hyperion";
 import { useAtomic } from "@/hooks/use-atomic";
 
 const blockchainEndpoints = [
-  { name: "Greymass", url: "https://wax.greymass.com/v1" },
-  { name: "EOS Rio", url: "https://wax.eosrio.io/v1" },
-  { name: "Aloha EOS", url: "https://api.wax.alohaeos.com/v1" },
+  { name: "Greymass", url: "https://wax.greymass.com" },
+  { name: "EOS Rio", url: "https://wax.eosrio.io" },
+  { name: "Aloha EOS", url: "https://api.wax.alohaeos.com" },
+  { name: "Pink.gg", url: "https://wax.pink.gg" },
+];
+
+const hyperionEndpoints = [
+  { name: "EOS USA", url: "https://wax.eosusa.io" },
+  { name: "EOSphere", url: "https://wax.eosphere.io" },
+  { name: "WAX Sweden", url: "https://api.waxsweden.org" },
+  { name: "Blokcrafters", url: "https://wax.blokcrafters.io" },
+  { name: "EOS Amsterdam", url: "https://wax.eu.eosamsterdam.net" },
 ];
 
 const assetsEndpoints = [
@@ -43,7 +53,8 @@ const marketEndpoints = [
 
 export function SystemSettings() {
   const { theme, setTheme } = useTheme();
-  const { endpoint, change } = useBlockchainNode();
+  const { endpoint: blockchainEndpoint, change: changeBlockchain } = useBlockchainNode();
+  const { endpoint: hyperionEndpoint, change: changeHyperion } = useHyperion();
   const { 
     assetsEndpoint, 
     marketEndpoint,
@@ -99,8 +110,8 @@ export function SystemSettings() {
 
           {/* Blockchain RPC */}
           <div className="px-2 py-3 space-y-2">
-            <Label className="text-xs font-semibold text-muted-foreground">WAX RPC Endpoint</Label>
-            <Select onValueChange={change} value={endpoint}>
+            <Label className="text-xs font-semibold text-muted-foreground">Standard EOSIO RPC</Label>
+            <Select onValueChange={changeBlockchain} value={blockchainEndpoint}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select RPC" />
               </SelectTrigger>
@@ -108,6 +119,28 @@ export function SystemSettings() {
                 <SelectGroup>
                   <SelectLabel>Blockchain RPC</SelectLabel>
                   {blockchainEndpoints.map((ep) => (
+                    <SelectItem key={ep.url} value={ep.url}>
+                      {ep.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <DropdownMenuSeparator />
+
+          {/* Hyperion API */}
+          <div className="px-2 py-3 space-y-2">
+            <Label className="text-xs font-semibold text-muted-foreground">Hyperion History API</Label>
+            <Select onValueChange={changeHyperion} value={hyperionEndpoint}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select Hyperion" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Hyperion Nodes</SelectLabel>
+                  {hyperionEndpoints.map((ep) => (
                     <SelectItem key={ep.url} value={ep.url}>
                       {ep.name}
                     </SelectItem>

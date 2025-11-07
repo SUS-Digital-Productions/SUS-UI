@@ -2,6 +2,7 @@ import { RootLayout } from "@/layouts/RootLayout";
 import { MainLayout } from "@/layouts/MainLayout";
 import { MarketplaceLayout } from "@/layouts/MarketplaceLayout";
 import { AboutPage } from "@/pages/AboutPage";
+import { AccountPage } from "@/pages/AccountPage";
 import { CollectionsPage } from "@/pages/CollectionsPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
           {
             path: "profile/:actor",
             element: <ComingSoonPage />,
+          },
+          {
+            path: "account/:account",
+            element: <AccountPage />,
           },
         ],
       },

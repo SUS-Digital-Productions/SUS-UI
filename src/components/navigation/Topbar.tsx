@@ -64,6 +64,13 @@ export function Topbar() {
                 <DropdownMenuSeparator />
                 
                 <DropdownMenuItem asChild>
+                  <Link to={`/account/${session.actor}`}>
+                    <User className="mr-2 h-4 w-4" />
+                    Account Details
+                  </Link>
+                </DropdownMenuItem>
+                
+                <DropdownMenuItem asChild>
                   <Link to={`/profile/${session.actor}`}>
                     <User className="mr-2 h-4 w-4" />
                     Profile
