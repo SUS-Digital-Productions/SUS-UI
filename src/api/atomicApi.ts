@@ -20,6 +20,16 @@ export interface Collection {
   market_fee: number;
   created_at_block: string;
   created_at_time: string;
+  data?: {
+    img?: string;
+    name?: string;
+    url?: string;
+    images?: string;
+    socials?: string;
+    description?: string;
+    creator_info?: string;
+    [key: string]: unknown;
+  };
 }
 
 export interface Asset {
@@ -68,6 +78,7 @@ interface CommonFetchParams {
   limit?: number;
   order?: string;
   sort?: string;
+  match?: string; // Search parameter for collections
 }
 
 interface FetchAssetsParams extends CommonFetchParams {
@@ -128,22 +139,30 @@ const validateSort = (s?: string): string | undefined => {
  * AtomicAssets API parameter semantics:
  * - order: direction (asc or desc)
  * - sort: field to sort by (created, updated, collection_name, etc.)
+ * - match: search term to filter collections (searches in collection_name and name)
  */
 export const fetchCollections = async (
   params: CommonFetchParams
 ): Promise<PaginatedResponse<Collection>> => {
-  const { endpoint, page = 1, limit = 12, order, sort } = params;
+  const { endpoint, page = 1, limit = 12, order, sort, match } = params;
 
   // Validate and normalize parameters
   const validatedOrder = validateOrder(order) || "desc";
   const validatedSort = validateSort(sort) || "created";
 
-  const qs = buildQuery({ 
+  const queryObj: Record<string, string | number> = {
     page, 
     limit, 
     order: validatedOrder, 
-    sort: validatedSort 
-  });
+    sort: validatedSort
+  };
+
+  // Add match parameter if provided
+  if (match && match.trim()) {
+    queryObj.match = match.trim();
+  }
+
+  const qs = buildQuery(queryObj);
 
   const res = await fetch(`${endpoint.replace(/\/$/, "")}/atomicassets/v1/collections?${qs}`);
   if (!res.ok) {

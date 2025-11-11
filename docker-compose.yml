@@ -7,13 +7,12 @@ services:
       dockerfile: Dockerfile
     container_name: sus-ui-app
     ports:
-      - "3000:80"
+      - "3000:3000"
     environment:
       - NODE_ENV=production
     restart: unless-stopped
     networks:
       - sus-network
-
   # Optional: Development mode service (uncomment if needed)
   # sus-ui-dev:
   #   image: node:20-alpine

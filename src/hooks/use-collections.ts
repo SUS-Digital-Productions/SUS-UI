@@ -7,6 +7,7 @@ interface UseCollectionsOptions {
   limit?: number;
   order?: string; // asc or desc
   sort?: string; // field name: created, updated, collection_name, etc.
+  match?: string; // search term for filtering collections
   enabled?: boolean;
 }
 
@@ -16,10 +17,10 @@ interface UseCollectionsOptions {
  */
 export const useCollections = (options: UseCollectionsOptions = {}) => {
   const { assetsEndpoint } = useAtomic();
-  const { page = 1, limit = 12, order = "desc", sort = "created", enabled = true } = options;
+  const { page = 1, limit = 12, order = "desc", sort = "created", match, enabled = true } = options;
 
   return useQuery({
-    queryKey: ["collections", assetsEndpoint, page, limit, order, sort],
+    queryKey: ["collections", assetsEndpoint, page, limit, order, sort, match],
     queryFn: () =>
       fetchCollections({
         endpoint: assetsEndpoint,
@@ -27,6 +28,7 @@ export const useCollections = (options: UseCollectionsOptions = {}) => {
         limit,
         order,
         sort,
+        match,
       }),
     enabled: enabled && !!assetsEndpoint,
     staleTime: 1000 * 60 * 5, // 5 minutes
@@ -42,10 +44,10 @@ export const useCollections = (options: UseCollectionsOptions = {}) => {
  */
 export const useInfiniteCollections = (options: Omit<UseCollectionsOptions, 'page'> = {}) => {
   const { assetsEndpoint } = useAtomic();
-  const { limit = 24, order = "desc", sort = "created", enabled = true } = options;
+  const { limit = 24, order = "desc", sort = "created", match, enabled = true } = options;
 
   return useInfiniteQuery({
-    queryKey: ["collections-infinite", assetsEndpoint, limit, order, sort],
+    queryKey: ["collections-infinite", assetsEndpoint, limit, order, sort, match],
     queryFn: ({ pageParam = 1 }) =>
       fetchCollections({
         endpoint: assetsEndpoint,
@@ -53,6 +55,7 @@ export const useInfiniteCollections = (options: Omit<UseCollectionsOptions, 'pag
         limit,
         order,
         sort,
+        match,
       }),
     enabled: enabled && !!assetsEndpoint,
     initialPageParam: 1,

@@ -47,18 +47,8 @@ const router = createBrowserRouter([
             element: <CollectionsPage />,
           },
           {
-            path: "view",
-            element: <MarketplaceLayout />,
-            children: [
-              {
-                path: "nfts",
-                element: <ViewNFTsPage />,
-              },
-            ],
-          },
-          {
             path: "inventory",
-            element: <ComingSoonPage />,
+            element: <ViewNFTsPage />,
           },
           {
             path: "activity",
